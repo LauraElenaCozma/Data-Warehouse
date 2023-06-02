@@ -1,0 +1,22 @@
+SHOW con_name;
+ALTER SESSION SET CONTAINER=orclpdb;
+
+CREATE USER oltp_admin IDENTIFIED BY pass_oltp;
+GRANT CREATE SESSION TO oltp_admin;
+GRANT CREATE TABLE TO oltp_admin;
+GRANT CREATE SEQUENCE TO oltp_admin;
+ALTER USER oltp_admin QUOTA UNLIMITED ON USERS;
+
+CREATE USER warehouse_admin IDENTIFIED BY pass_warehouse;
+GRANT CREATE SESSION TO warehouse_admin;
+GRANT CREATE TABLE TO warehouse_admin;
+ALTER USER warehouse_admin QUOTA UNLIMITED ON USERS;
+
+GRANT CREATE PROCEDURE TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.rezervare TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.DESTINATIE TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.OPERATOR_ZBOR TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.METODA_PLATA TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.CLASA_ZBOR TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.ZBOR TO oltp_admin;
+GRANT SELECT, INSERT, DELETE, UPDATE ON warehouse_admin.TIMP TO oltp_admin;

@@ -1,0 +1,107 @@
+-------- creare tabele
+CREATE TABLE CLIENT
+    (client_id NUMBER(8) PRIMARY KEY,
+     nume VARCHAR2(20) NOT NULL,
+     prenume VARCHAR2(30) NOT NULL,
+     email VARCHAR2(40) NOT NULL,
+     numar_telefon VARCHAR2(30) NOT NULL);
+
+SELECT * FROM CLIENT;
+
+CREATE TABLE DESTINATIE
+    (destinatie_id VARCHAR2(4) PRIMARY KEY,
+     oras VARCHAR2(60) NOT NULL,
+     stat VARCHAR2(5) NOT NULL);
+
+SELECT * FROM DESTINATIE;
+
+CREATE TABLE ZBOR
+    (zbor_id NUMBER(8) PRIMARY KEY,
+     operator_id VARCHAR2(3) REFERENCES OPERATOR_ZBOR(operator_id) ON DELETE CASCADE,
+     aeronava_id VARCHAR2(7),
+     durata NUMBER(4) NOT NULL,
+     distanta NUMBER(4) NOT NULL,
+     total_locuri NUMBER(4) NOT NULL, 
+     anulat NUMBER(1) CHECK (anulat IN (0, 1)),
+     data_plecare TIMESTAMP NOT NULL,
+     data_sosire TIMESTAMP NOT NULL,
+     locatie_plecare_id VARCHAR2(4) REFERENCES DESTINATIE(destinatie_id) ON DELETE CASCADE,
+     locatie_sosire_id VARCHAR2(4) REFERENCES DESTINATIE(destinatie_id) ON DELETE CASCADE);
+
+SELECT * FROM ZBOR;
+
+CREATE TABLE REZERVARE
+    (rezervare_id  NUMBER(8) PRIMARY KEY,
+     nr_pasageri NUMBER(2) NOT NULL CHECK(nr_pasageri > 0),
+     nr_pasageri_femei NUMBER(2) NOT NULL CHECK(nr_pasageri_femei >= 0),
+     nr_pasageri_barbati NUMBER(2) NOT NULL CHECK(nr_pasageri_barbati >= 0),
+     data_rezervare TIMESTAMP NOT NULL,
+     suma_totala NUMBER(8) NOT NULL CHECK(suma_totala >= 0),
+     client_id NUMBER(8) REFERENCES CLIENT(client_id) ON DELETE CASCADE,
+     zbor_id NUMBER(8) REFERENCES ZBOR(zbor_id) ON DELETE CASCADE,
+     clasa_zbor_id NUMBER(2) REFERENCES CLASA_ZBOR(clasa_zbor_id) ON DELETE CASCADE,
+     metoda_plata_id NUMBER(2) REFERENCES METODA_PLATA(metoda_plata_id) ON DELETE CASCADE);
+
+SELECT * FROM REZERVARE;
+
+CREATE TABLE OPERATOR_ZBOR
+    (operator_id VARCHAR2(3) PRIMARY KEY,
+     nume VARCHAR2(50) NOT NULL);
+     
+SELECT * FROM OPERATOR_ZBOR;
+
+CREATE TABLE METODA_PLATA
+    (metoda_plata_id NUMBER(2) PRIMARY KEY,
+     denumire VARCHAR2(30) NOT NULL);
+     
+     
+CREATE TABLE CLASA_ZBOR
+    (clasa_zbor_id NUMBER(2) PRIMARY KEY,
+     denumire VARCHAR2(20) NOT NULL);
+     
+     
+SELECT * FROM CLIENT;
+
+CREATE SEQUENCE client_seq
+START WITH 10001
+INCREMENT BY 1;
+
+SELECT * FROM DESTINATIE;
+
+CREATE SEQUENCE destinatie_seq
+START WITH 323
+INCREMENT BY 1;
+
+SELECT * FROM ZBOR;
+CREATE SEQUENCE zbor_seq 
+START WITH 1048576
+INCREMENT BY 1;
+
+SELECT * FROM REZERVARE;
+CREATE SEQUENCE rezervare_seq 
+START WITH 1040001
+INCREMENT BY 1;
+
+SELECT * FROM OPERATOR_ZBOR;
+CREATE SEQUENCE operator_seq 
+START WITH 15
+INCREMENT BY 1;
+
+CREATE SEQUENCE clasa_zbor_seq 
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO CLASA_ZBOR VALUES(clasa_zbor_seq.NEXTVAL, 'FIRST');
+INSERT INTO CLASA_ZBOR VALUES(clasa_zbor_seq.NEXTVAL, 'BUSINESS');
+INSERT INTO CLASA_ZBOR VALUES(clasa_zbor_seq.NEXTVAL, 'ECONOMY');
+
+SELECT * FROM CLASA_ZBOR;
+
+CREATE SEQUENCE metoda_plata_seq 
+START WITH 1
+INCREMENT BY 1;
+
+INSERT INTO METODA_PLATA VALUES(metoda_plata_seq.NEXTVAL, 'CASH');
+INSERT INTO METODA_PLATA VALUES(metoda_plata_seq.NEXTVAL, 'CARD');
+INSERT INTO METODA_PLATA VALUES(metoda_plata_seq.NEXTVAL, 'TRANSFER BANCAR');
+
